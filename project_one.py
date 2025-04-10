@@ -239,7 +239,7 @@ def partial_dep(candidate_keys, lhs_list, rhs_list):
     return partial_deps
 print(" ")
 partial_deps = partial_dep(candidate_keys, lhs_list, rhs_list)
-print(partial_deps)
+print(f"These are the partial dependencies: {partial_deps}")
 print(" ")
 
 def transitive_dep(candidate_keys, lhs_list, rhs_list):
