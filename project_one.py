@@ -19,8 +19,10 @@ print(sample)
 
 # data types 
 types = df.dtypes
+print(" ")
 print("Here are the data types present.")
 print(types)
+print(" ")
 
 func_dep = input("Enter the functional dependencies for the dataset, in a A → B format, where each dependency is / separated. ")
 prim_key = input("Enter the primary key(s), comma separated. ")
@@ -159,10 +161,10 @@ def find_cand_keys(lhs_list, rhs_list, all_attributes):
     
     return candidate_keys
     
-    
+print(" ")    
 candidate_keys = find_cand_keys(lhs_list, rhs_list, all_attributes)
 print(candidate_keys)
-
+print(" ")
 def compute_closures(candidate_keys, lhs_list, rhs_list):
     '''
     Takes in the list of candidate keys, lhs, and rhs, and
@@ -201,9 +203,9 @@ def compute_closures(candidate_keys, lhs_list, rhs_list):
         else:
             all_sets[k] = closures
     return all_sets
-
+print(" ")
 print(compute_closures(candidate_keys, lhs_list, rhs_list))
-
+print(" ")
 def partial_dep(candidate_keys, lhs_list, rhs_list):
     '''
     Finds the partial dependencies based upon the candidate keys.
@@ -235,9 +237,10 @@ def partial_dep(candidate_keys, lhs_list, rhs_list):
                                 partial_deps.append((lhs, rhs, keys))
                                 break
     return partial_deps
-
+print(" ")
 partial_deps = partial_dep(candidate_keys, lhs_list, rhs_list)
 print(partial_deps)
+print(" ")
 
 def transitive_dep(candidate_keys, lhs_list, rhs_list):
     transitive_deps = []
@@ -281,9 +284,9 @@ def transitive_dep(candidate_keys, lhs_list, rhs_list):
                     transitive_deps.append((lhs, rhs))
     
     return transitive_deps
-    
+print(" ")    
 print(transitive_dep(candidate_keys, lhs_list, rhs_list))
-
+print(" ")
 # STEP 3
 
 def one_nf(df):
@@ -295,10 +298,10 @@ def one_nf(df):
                 return False
     
     return True
-
+print(" ")
 is_onenf = one_nf(df)
 print(f"True if it is in 1NF, False if it is not: {is_onenf}")
-
+print(" ")
 def two_nf(df, primary_keys, partial_deps):
     # Brings the df to 2NF form
     if type(primary_keys) == str:
