@@ -1,0 +1,5 @@
+StudentID,CourseID,StudentName,CourseName,Instructor
+1,CS101,Alice,Intro to CS,Smith
+1,MA101,Alice,Calc I,Jones
+2,CS101,Bob,Intro to CS,Smith
+2,PH101,Bob,Physics I,Lee
