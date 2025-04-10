@@ -3,6 +3,7 @@ import pandas as pd
 import csv
 import itertools
 
+# STEP 1
 filename = input("What is the name of the csv you'd like to input? ")
 
 df = pd.read_csv(filename)
@@ -21,11 +22,11 @@ types = df.dtypes
 print("Here are the data types present.")
 print(types)
 
-func_dep = input("Enter the functional dependencies for the dataset, in a A → B format, where each dependency is comma separated. ")
+func_dep = input("Enter the functional dependencies for the dataset, in a A → B format, where each dependency is / separated. ")
 prim_key = input("Enter the primary key(s), comma separated. ")
 
 # Separates string input
-func_dep = func_dep.split(",")
+func_dep = func_dep.split("/")
 
 # Obtains all column names/attributes
 all_attributes = df.columns.tolist()
@@ -53,6 +54,7 @@ def check_list(raw_list):
 lhs_list = check_list(lhs_list)
 rhs_list = check_list(rhs_list)
 
+# STEP 2
 def find_cand_keys(lhs_list, rhs_list, all_attributes):
     '''
     Takes in lhs_list(list of the left side of fds), rhs_list, and all_attributes(list of
@@ -109,7 +111,7 @@ def find_cand_keys(lhs_list, rhs_list, all_attributes):
         for combo in itertools.combinations(other, r):
             trial_key = necessary + list(combo)
             
-            # --- compute closure of trial_key ---
+            # compute closure of trial_key
             closure = trial_key[:]  # start with the key itself
             while True:
                 b_len = len(closure)
@@ -162,6 +164,11 @@ candidate_keys = find_cand_keys(lhs_list, rhs_list, all_attributes)
 print(candidate_keys)
 
 def compute_closures(candidate_keys, lhs_list, rhs_list):
+    '''
+    Takes in the list of candidate keys, lhs, and rhs, and
+    computese the attribute closures
+    '''
+    
     all_sets = {}
     
     # make all values a list to avoid confusion
@@ -175,6 +182,7 @@ def compute_closures(candidate_keys, lhs_list, rhs_list):
         # While loop to make sure everything is iterated through
         while appended:
             # Flag used to make program loop through everything
+            # as well as make the while loop possible
             appended = False
             for i in range(len(lhs_list)):
                 lhs_dep = lhs_list[i]
@@ -197,6 +205,11 @@ def compute_closures(candidate_keys, lhs_list, rhs_list):
 print(compute_closures(candidate_keys, lhs_list, rhs_list))
 
 def partial_dep(candidate_keys, lhs_list, rhs_list):
+    '''
+    Finds the partial dependencies based upon the candidate keys.
+    Partial dependencies occur when a non candidate key is
+    dependent partly on one.
+    '''
     
     partial_deps = []
     # make each key a list to make sure no errors occur
@@ -208,7 +221,6 @@ def partial_dep(candidate_keys, lhs_list, rhs_list):
     
         if len(keys) < 2:
                 continue
-        
         for i in range(len(lhs_list)):
                 lhs = lhs_list[i]
                 rhs = rhs_list[i]
@@ -255,7 +267,8 @@ def transitive_dep(candidate_keys, lhs_list, rhs_list):
     for att in all_attrs:
         if att not in cand_attrs:
             not_cand.append(att)
-    
+    # if all lhs and at least one rhs
+    # is in not_cand,  it is transitive
     for i in range(len(lhs_list)):
         lhs = lhs_list[i]
         rhs = rhs_list[i]
@@ -284,7 +297,7 @@ def one_nf(df):
     return True
 
 is_onenf = one_nf(df)
-print(is_onenf)
+print(f"True if it is in 1NF, False if it is not: {is_onenf}")
 
 def two_nf(df, primary_keys, partial_deps):
     # Brings the df to 2NF form
@@ -328,7 +341,7 @@ def two_nf(df, primary_keys, partial_deps):
     for col in df.columns.tolist():
         if col not in base_pk and col not in pulled:
             remainder_attrs.append(col)
-    remainder = df[attrs].drop_duplicates().reset_index(drop=True)
+    remainder = df[remainder_attrs].drop_duplicates().reset_index(drop=True)
 
     # 6) Return remainder first, then each partial‑dep table
     return [(remainder_attrs, remainder)] + relations
@@ -353,6 +366,7 @@ for rel in two_nf_done:
     name = "table " + str(counter)
     counter += 1
     
+    # prevents error from table already existing
     mycursor.execute(f"DROP TABLE IF EXISTS `{name}`;")
     
     cols = ""
@@ -400,6 +414,7 @@ for rel in two_nf_done:
     # print each row
     for row in rows:
         # convert each value to string and join with tabs
+        # So it is not cluttered
         print("\t".join(str(v) for v in row))
     
     # select all rows
@@ -416,6 +431,7 @@ while True:
             mycursor.execute(user_cmd)
         except Exception as e:
             print(f"There was an error. This is what it was: {e} ")
+            break
 
     if "SELECT" in user_cmd:
         rows = mycursor.fetchall()
@@ -427,10 +443,3 @@ while True:
 
 mydbase.commit()
 mydbase.close()
-    
-
-
-
-            
-    
-
